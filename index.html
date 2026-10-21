@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Moonrail · a cozy pixel focus timer for Mac</title>
+<meta name="description" content="Moonrail is a cozy pixel focus timer for your Mac's menu bar. Every focus session is a night train ride across an old town, with the moon as your timer.">
+<meta name="theme-color" content="#0d0f24">
+<link rel="canonical" href="https://moonrailapp.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://moonrailapp.github.io/">
+<meta property="og:title" content="Moonrail · a cozy pixel focus timer for Mac">
+<meta property="og:description" content="Your focus is a night train. A cozy pixel focus timer for your Mac's menu bar.">
+<meta property="og:image" content="https://moonrailapp.github.io/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Moonrail night train stopped at a station in a pixel-art old town at night, with the Moonrail icon and title.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="img/icon-512.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&family=Pixelify+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<script>
+  // Pick the layout before first paint: the scroll-driven ride, or a plain page for reduced motion.
+  (function (d) {
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    d.className = still ? 'js' : 'js ride';
+  })(document.documentElement);
+</script>
+<script src="js/ride.js" defer></script>
+</head>
+<body class="home">
+<a class="skip" href="#central">Skip to content</a>
+
+<div class="track">
+  <div class="stage">
+    <div class="scene">
+      <canvas id="scene" width="332" height="208" role="img" aria-label="The Moonrail night train crossing a pixel-art old town at night, stopping at stations along a river bridge."></canvas>
+      <img class="still" src="img/still.png" width="332" height="208" alt="The Moonrail night train stopped at a station in a pixel-art old town at night, with Momo the penguin on the platform holding a cup of tea.">
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Moonrail home">
+        <img src="img/icon-64.png" width="34" height="34" alt="">
+        <span>MOONRAIL</span>
+      </a>
+      <div class="topbar-right">
+        <span class="clock" id="clock" aria-hidden="true">RIDE 25:00</span>
+        <span class="badge">COMING SOON · MAC</span>
+      </div>
+    </header>
+
+    <main class="signs">
+      <section class="sign" id="central" data-station="0" aria-labelledby="central-title">
+        <span class="plate">CENTRAL · PLATFORM 1</span>
+        <p class="flap" id="flap"><span class="visually-hidden">Moonrail</span><span aria-hidden="true">M</span><span aria-hidden="true">O</span><span aria-hidden="true">O</span><span aria-hidden="true">N</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span><span aria-hidden="true">I</span><span aria-hidden="true">L</span></p>
+        <h1 class="stitle" id="central-title">Your focus is a night train.</h1>
+        <p class="stext">A cozy pixel focus timer for your Mac's menu bar. Every session is a ride across an old town at night.</p>
+        <p class="mini depart">SCROLL TO DEPART <span aria-hidden="true">↓</span></p>
+      </section>
+
+      <section class="sign" id="maple-st" data-station="1" aria-labelledby="maple-title">
+        <span class="plate">MAPLE ST</span>
+        <h2 class="stitle" id="maple-title">The moon is your timer.</h2>
+        <p class="stext">Look up: the moon has been crossing the sky as you scrolled. In Moonrail it does the same over your 25 minutes. No ticking numbers to stare at, just a quiet night going by.</p>
+        <ul class="tags">
+          <li class="mini">25 MIN RIDES</li>
+          <li class="mini">COUNT UP</li>
+          <li class="mini red">RED SIGNAL = PAUSE</li>
+        </ul>
+      </section>
+
+      <section class="sign" id="river-gate" data-station="2" aria-labelledby="river-title">
+        <span class="plate">RIVER GATE</span>
+        <h2 class="stitle" id="river-title">Arrive, then stretch.</h2>
+        <p class="stext">Every ride ends at a real station with a soft chime. Momo hops out for a cup of tea while you take a 5-minute break. Then: all aboard.</p>
+        <div class="ticket" role="img" aria-label="A punched ride ticket: number 03, Maple St to River Gate, 25 minute ride, Sprout.">
+          <div class="ticket-main">
+            <span class="ticket-small">RIDE TICKET · NO. 03</span>
+            <span class="ticket-route">MAPLE ST → RIVER GATE</span>
+            <span class="ticket-small">25 MIN RIDE · SPROUT</span>
+          </div>
+          <div class="ticket-stub"><span>PUNCHED</span></div>
+        </div>
+      </section>
+
+      <section class="sign" id="clock-tower" data-station="3" aria-labelledby="clock-title">
+        <span class="plate">CLOCK TOWER</span>
+        <h2 class="stitle" id="clock-title">Every mile, in the logbook.</h2>
+        <p class="stext">Your focus by day, week, month and year, what you worked on, the hours you ride best, and a whole year of nights as golden tiles.</p>
+        <div class="heat" aria-hidden="true"><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l0"></i><i class="l1"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l1"></i><i class="l1"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l2"></i><i class="l2"></i><i class="l3"></i><i class="l3"></i><i class="l2"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i><i class="l2"></i><i class="l2"></i><i class="l1"></i><i class="l1"></i><i class="l3"></i><i class="l1"></i><i class="l2"></i><i class="l0"></i><i class="l4"></i><i class="l2"></i><i class="l0"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l1"></i><i class="l1"></i><i class="l3"></i><i class="l3"></i><i class="l0"></i><i class="l4"></i><i class="l0"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l1"></i><i class="l2"></i><i class="l0"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l4"></i><i class="l4"></i><i class="l0"></i><i class="l0"></i><i class="l1"></i><i class="l3"></i><i class="l0"></i><i class="l3"></i><i class="l1"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l4"></i><i class="l1"></i><i class="l4"></i><i class="l0"></i><i class="l3"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l4"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i><i class="l2"></i><i class="l2"></i><i class="l1"></i><i class="l4"></i><i class="l2"></i><i class="l4"></i><i class="l2"></i><i class="l2"></i><i class="l0"></i><i class="l0"></i><i class="l3"></i></div>
+        <p class="mini">STAYS ON YOUR MAC · NO ACCOUNT · NO TRACKING</p>
+      </section>
+
+      <section class="sign" id="end-of-the-line" data-station="4" aria-labelledby="end-title">
+        <span class="plate">END OF THE LINE</span>
+        <h2 class="stitle" id="end-title">The ride is free. Pro goes further.</h2>
+        <ul class="pro">
+          <li><span>Your own ride lengths, 15 to 90 min</span><span class="gold">PRO</span></li>
+          <li><span>The full logbook, every year</span><span class="gold">PRO</span></li>
+          <li><span>Pin the train to your desktop</span><span class="gold">PRO</span></li>
+          <li><span>Unlimited cargo, new lines to come</span><span class="gold">PRO</span></li>
+        </ul>
+        <p class="price">From $1.99 a month · $11.99 a year with 7 days free · or $23.99 once. Prices vary by country.</p>
+        <p class="store"><span class="store-badge">COMING SOON TO THE MAC APP STORE</span></p>
+        <footer class="foot">
+          <nav aria-label="Site">
+            <a class="mini" href="privacy.html">PRIVACY</a>
+            <a class="mini" href="terms.html">TERMS</a>
+            <a class="mini" href="support.html">SUPPORT</a>
+            <a class="mini" href="mailto:sproutgardensupport@gmail.com?subject=Moonrail">CONTACT</a>
+          </nav>
+          <span class="mini">© 2026 HIRDYANSH</span>
+        </footer>
+      </section>
+    </main>
+
+    <nav class="route" aria-label="Stations">
+      <div class="route-line" aria-hidden="true">
+        <div class="route-dash"></div>
+        <div class="route-gold" id="route-gold"></div>
+        <i class="route-stop" style="left:0%"></i>
+        <i class="route-stop" style="left:25%"></i>
+        <i class="route-stop" style="left:50%"></i>
+        <i class="route-stop" style="left:75%"></i>
+        <i class="route-stop" style="left:100%"></i>
+        <div class="route-train" id="route-train"></div>
+      </div>
+      <ol class="route-names">
+        <li><a href="#central" data-go="0">CENTRAL</a></li>
+        <li><a href="#maple-st" data-go="1">MAPLE ST</a></li>
+        <li><a href="#river-gate" data-go="2">RIVER GATE</a></li>
+        <li><a href="#clock-tower" data-go="3">CLOCK TOWER</a></li>
+        <li><a href="#end-of-the-line" data-go="4">END OF LINE</a></li>
+      </ol>
+    </nav>
+  </div>
+</div>
+</body>
+</html>
