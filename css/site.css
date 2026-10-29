@@ -43,7 +43,8 @@ img { max-width: 100%; }
 .brand span { font-family: var(--label); font-size: 16px; font-weight: 700; color: var(--gold); letter-spacing: 1px; }
 .topbar-right { display: flex; align-items: center; gap: 14px; }
 .clock { font-family: var(--label); font-size: 11px; color: var(--cream); letter-spacing: .5px; display: none; white-space: nowrap; }
-.badge { font-family: var(--label); font-size: 11px; color: var(--card-2); background: var(--cream); padding: 8px 12px; border-radius: 6px; box-shadow: inset 0 -3px 0 #b9ae8e; white-space: nowrap; }
+.badge { display: block; flex: none; line-height: 0; border-radius: 7px; }
+.badge img { display: block; width: auto; height: 40px; }
 
 .plate { display: inline-flex; align-items: center; gap: 8px; background: var(--cream); color: var(--card-2); font-family: var(--label); font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 3px; letter-spacing: 1px; }
 
@@ -82,7 +83,9 @@ html.ride .end-still { display: none; }
 .pro li .gold { font-family: var(--label); font-size: 11px; align-self: center; }
 .price { margin: 14px 0 0; font-size: 15px; color: var(--cream); }
 .store { margin: 16px 0 0; }
-.store-badge { display: inline-block; font-family: var(--label); font-size: 12px; color: var(--card-2); background: var(--gold); padding: 12px 16px; border-radius: 8px; box-shadow: inset 0 -4px 0 #b8892e; }
+.store-badge { display: inline-block; line-height: 0; border-radius: 9px; }
+.store-badge img { display: block; width: auto; height: 48px; }
+.badge:focus-visible, .store-badge:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; }
 .foot { margin-top: 16px; display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; }
 .foot nav { display: flex; gap: 8px 16px; flex-wrap: wrap; }
 .foot a.mini { color: var(--muted); text-decoration: none; padding: 4px 0; }
@@ -143,7 +146,6 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
   .topbar { height: 56px; }
   .brand img { width: 30px; height: 30px; }
   .brand span { font-size: 14px; }
-  .badge { font-size: 10px; padding: 7px 9px; }
   .topbar-right { gap: 10px; }
   .sign { padding: 18px 18px; }
   .stitle { font-size: 26px; }
@@ -157,7 +159,7 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
   html.ride .pro li { padding: 5px 0; font-size: 14px; }
   html.ride .price { font-size: 14px; margin-top: 10px; }
   html.ride .store { margin-top: 12px; }
-  html.ride .store-badge { font-size: 11px; padding: 10px 12px; }
+  html.ride .store-badge img { height: 40px; }
   html.ride .foot { margin-top: 12px; }
   html.ride .route { bottom: 12px; width: calc(100% - 24px); padding: 8px 12px; border-radius: 8px; }
   .route-names { justify-content: center; margin-top: 6px; }
@@ -171,9 +173,9 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
   .brand span { font-size: 12px; letter-spacing: .5px; }
   .topbar-right { gap: 8px; }
   .clock { font-size: 10px; letter-spacing: 0; }
-  .badge { font-size: 9px; padding: 6px 7px; }
 }
-@media (max-width: 370px) {
+/* The 40px App Store badge and the ride clock don't both fit here. */
+@media (max-width: 440px) {
   .clock { display: none !important; }
 }
 /* Narrow screens: the Pro list runs on as one paragraph, so the END card stays short and the
@@ -190,7 +192,8 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
   html.ride .stitle { font-size: 21px; margin: 8px 0 6px; }
   html.ride .stext, html.ride .price { font-size: 14px; }
   html.ride .pro li { padding: 3px 0; font-size: 13px; }
-  html.ride .store-badge { padding: 8px 10px; }
+  html.ride .store, html.ride .foot { margin-top: 10px; }
+  html.ride .foot, html.ride .foot nav { gap: 2px 12px; }
   html.ride .flap { margin-top: 10px; }
   html.ride #end-of-the-line .line-note { font-size: 9px; letter-spacing: 0; margin-top: 6px; }
   html.ride .foot { gap: 4px 12px; margin-top: 10px; }
