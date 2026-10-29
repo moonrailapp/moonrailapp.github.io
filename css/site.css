@@ -74,6 +74,9 @@ img { max-width: 100%; }
 .heat .l3 { background: #b88a2a; }
 .heat .l4 { background: var(--gold); }
 
+.line-note { margin: 10px 0 0; font-family: var(--label); font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+.end-still { display: block; width: 100%; height: auto; aspect-ratio: 332 / 208; border-radius: 4px; border: 2px solid var(--border); margin: 0 0 16px; }
+html.ride .end-still { display: none; }
 .pro { list-style: none; margin: 0; padding: 0; }
 .pro li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 15px; color: var(--text); }
 .pro li .gold { font-family: var(--label); font-size: 11px; align-self: center; }
@@ -89,7 +92,7 @@ img { max-width: 100%; }
 .stage { position: relative; }
 .scene { position: relative; height: clamp(260px, 58vh, 640px); overflow: hidden; background: #031e55; }
 .scene canvas, .scene .still { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.scene .still { object-fit: cover; object-position: 62% 50%; image-rendering: pixelated; }
+.scene .still { object-fit: cover; object-position: 62% 50%; }
 html.js .scene .still { display: none; }
 html:not(.js) .scene canvas { display: none; }
 .signs { display: grid; gap: 32px; max-width: 640px; margin: -48px auto 0; padding: 0 16px 64px; position: relative; z-index: 2; }
@@ -115,6 +118,13 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
 .route-names a:hover { color: var(--gold-hi); }
 .route-names a.here { color: var(--cream); }
 
+/* END OF THE LINE has the longest card: a little wider on desktops, so its rows don't wrap. */
+@media (min-width: 721px) {
+  html.ride .sign#end-of-the-line { width: min(520px, calc(100% - 32px)); }
+  html.ride #end-of-the-line .line-note { margin-top: 8px; }
+  html.ride #end-of-the-line .pro li { padding: 5px 0; }
+}
+
 /* Short desktop windows: tighten the cards so the last stop fits above the route bar. */
 @media (max-height: 780px) and (min-width: 721px) {
   html.ride .sign { top: 80px; padding: 16px 20px; }
@@ -123,6 +133,8 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
   html.ride .pro li { padding: 5px 0; }
   html.ride .store { margin-top: 12px; }
   html.ride .flap { margin-top: 12px; }
+  html.ride #end-of-the-line .stitle { font-size: 28px; }
+  html.ride #end-of-the-line .pro li { padding: 3px 0; }
 }
 
 /* Phones: scene in the top half, the card across the bottom, a compact route bar. */
@@ -172,6 +184,26 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
   html.ride .pro li { padding: 3px 0; font-size: 13px; }
   html.ride .store-badge { padding: 8px 10px; }
   html.ride .flap { margin-top: 10px; }
+  /* The Pro list runs on as one paragraph, so the longest card fits. */
+  html.ride #end-of-the-line .line-note { font-size: 9px; letter-spacing: 0; margin-top: 6px; }
+  html.ride #end-of-the-line .pro { border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); padding: 6px 0; font-size: 13px; line-height: 1.45; }
+  html.ride #end-of-the-line .pro li { display: inline; padding: 0; border: 0; font-size: inherit; }
+  html.ride #end-of-the-line .pro li .gold { display: none; }
+  html.ride #end-of-the-line .pro li + li::before { content: " · "; color: var(--gold); }
+  html.ride .foot { gap: 4px 12px; margin-top: 10px; }
+  html.ride .foot nav { gap: 4px 12px; }
+  html.ride .foot .mini { font-size: 10px; letter-spacing: 0; }
+}
+/* The smallest phones: a little smaller still. */
+@media (max-width: 360px) and (max-height: 600px) {
+  html.ride .stitle { margin: 6px 0 4px; }
+  html.ride .price { font-size: 13px; line-height: 1.35; margin-top: 8px; }
+  html.ride #end-of-the-line .pro { padding: 4px 0; font-size: 12px; }
+  html.ride .store { margin-top: 8px; }
+  html.ride .sign { padding: 10px 14px; }
+  html.ride .plate { padding: 4px 8px; }
+  html.ride #end-of-the-line .line-note { margin-top: 4px; }
+  html.ride .store-badge { padding: 6px 10px; }
 }
 
 /* ---------- sub-pages ---------- */
@@ -189,7 +221,7 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
 .doc details { border-bottom: 1px dashed var(--border); padding: 10px 0; }
 .doc summary { cursor: pointer; color: var(--cream); font-weight: 500; }
 .doc details p { margin: 8px 0 4px; }
-.doc .banner { display: block; width: 100%; height: auto; aspect-ratio: 332 / 208; image-rendering: pixelated; border-radius: 6px; border: 2px solid var(--border); margin: 0 0 24px; }
+.doc .banner { display: block; width: 100%; height: auto; aspect-ratio: 332 / 208; border-radius: 6px; border: 2px solid var(--border); margin: 0 0 24px; }
 .page-foot { max-width: 720px; margin: 0 auto; padding: 0 16px 40px; display: flex; gap: 8px 16px; flex-wrap: wrap; justify-content: center; }
 .page-foot a.mini { color: var(--muted); text-decoration: none; }
 .page-foot a.mini:hover, .page-foot a.mini[aria-current] { color: var(--gold); }
