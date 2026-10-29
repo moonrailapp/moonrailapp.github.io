@@ -176,6 +176,14 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
 @media (max-width: 370px) {
   .clock { display: none !important; }
 }
+/* Narrow screens: the Pro list runs on as one paragraph, so the END card stays short and the
+   Snow station and Momo show above it. */
+@media (max-width: 600px) {
+  html.ride #end-of-the-line .pro { border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); padding: 6px 0; font-size: 14px; line-height: 1.45; }
+  html.ride #end-of-the-line .pro li { display: inline; padding: 0; border: 0; font-size: inherit; }
+  html.ride #end-of-the-line .pro li .gold { display: none; }
+  html.ride #end-of-the-line .pro li + li::before { content: " · "; color: var(--gold); }
+}
 /* Short phones: keep the longest card clear of the header. */
 @media (max-width: 720px) and (max-height: 700px) {
   html.ride .sign { padding: 12px 14px; }
@@ -184,15 +192,11 @@ html.ride .route { display: block; position: absolute; z-index: 4; left: 50%; bo
   html.ride .pro li { padding: 3px 0; font-size: 13px; }
   html.ride .store-badge { padding: 8px 10px; }
   html.ride .flap { margin-top: 10px; }
-  /* The Pro list runs on as one paragraph, so the longest card fits. */
   html.ride #end-of-the-line .line-note { font-size: 9px; letter-spacing: 0; margin-top: 6px; }
-  html.ride #end-of-the-line .pro { border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); padding: 6px 0; font-size: 13px; line-height: 1.45; }
-  html.ride #end-of-the-line .pro li { display: inline; padding: 0; border: 0; font-size: inherit; }
-  html.ride #end-of-the-line .pro li .gold { display: none; }
-  html.ride #end-of-the-line .pro li + li::before { content: " · "; color: var(--gold); }
   html.ride .foot { gap: 4px 12px; margin-top: 10px; }
   html.ride .foot nav { gap: 4px 12px; }
   html.ride .foot .mini { font-size: 10px; letter-spacing: 0; }
+  html.ride #end-of-the-line .pro { font-size: 13px; }
 }
 /* The smallest phones: a little smaller still. */
 @media (max-width: 360px) and (max-height: 600px) {
