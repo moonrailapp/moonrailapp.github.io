@@ -9,6 +9,9 @@
   'use strict';
 
   var W = 332, H = 208, L = 700;           // art size, art px between stations
+  // CLOCK TOWER -> END OF THE LINE is longer, so between those two stations there's a stretch with
+  // neither on screen (Old Town's is 431 art px wide, the Snow line's 332): the line changes there.
+  var L4 = 900;
   var B = 9.6;                              // HD train image px per art px
   var BX = 32, BY = 103.5;                  // the train body's top-left (wheels on the rail at y 149)
   var SNOW = 1536 / 332;                    // Snow Mountain Line image px per art px
@@ -86,11 +89,34 @@
   function clamp01(x) { return Math.min(1, Math.max(0, x)); }
   function mix(a, b, k) { return a + (b - a) * k; }
 
-  // The Snow Mountain Line over the second half of CLOCK TOWER -> END OF THE LINE: `a` how much of
-  // it shows, `m` its sunrise (night at first, full sunrise on arrival at END OF THE LINE).
-  function snowMix(s) {
-    var q = clamp01((s - 3.5) / 0.5);
-    return { a: q, m: clamp01((q - 0.15) / 0.85) };
+  function smooth(x) { x = clamp01(x); return x * x * (3 - 2 * x); }
+
+  // Distance travelled at s, and where station j stops.
+  function stopAt(j) { return j <= 3 ? j * L : 3 * L + L4; }
+  function travelOf(s) { return s <= 3 ? s * L : 3 * L + (s - 3) * L4; }
+
+  // The change of line, in the middle of the stretch where neither station is on screen: the Old
+  // Town station has gone past the left edge (431 art px after CLOCK TOWER, less its -12 rest) and
+  // the Snow station hasn't reached the right edge (332) yet.
+  var SWITCH = 3 + ((431 - 12) + (L4 - 12 - 332)) / 2 / L4;
+  // `mist`: the scenery dips into a snowy haze (up to 70%); `a`: under the thickest of it, the Old
+  // Town gives way to the Snow Mountain Line; `m`: its sunrise, night as the mist clears and full
+  // sunrise on arrival at END OF THE LINE.
+  function lineChange(s) {
+    var q = clamp01((s - SWITCH - 0.03) / (4 - SWITCH - 0.03));
+    return {
+      mist: 0.7 * (1 - smooth((Math.abs(s - SWITCH) - 0.03) / 0.14)),
+      a: smooth((s - SWITCH + 0.03) / 0.06),
+      m: clamp01((q - 0.15) / 0.85)
+    };
+  }
+
+  // A few snowflakes drifting in the mist: [x, y, size, fall speed, opacity], fixed so every
+  // frame is a function of time and distance.
+  var FLAKES = [];
+  for (var fi = 0; fi < 42; fi++) {
+    var hsh = function (n) { var x = Math.sin(fi * 127.1 + n * 311.7) * 43758.5453; return x - Math.floor(x); };
+    FLAKES.push([hsh(1) * 344, hsh(2) * 212, hsh(3) < 0.25 ? 2 : 1, 7 + hsh(4) * 9, 0.55 + hsh(5) * 0.4]);
   }
 
   /* ---------- the scene renderer ---------- */
@@ -175,11 +201,11 @@
      Snow Mountain Line art fading in once it has loaded) } */
   Scene.prototype.draw = function (st) {
     var g = this.ctx, t = st.t, s = st.s, d = st.d;
-    var travel = s * L;
+    var travel = travelOf(s);
     var stopped = Math.abs(s - Math.round(s)) < 0.001;
     var k = Math.round(s);
-    var sm = snowMix(s), a = this.has('snow') ? sm.a * (st.snowIn == null ? 1 : st.snowIn) : 0;
-    var m = a > 0 ? sm.m : 0;
+    var lc = lineChange(s), a = this.has('snow') ? lc.a * (st.snowIn == null ? 1 : st.snowIn) : 0;
+    var m = a > 0 ? lc.m : 0;
 
     // One moon for both lines, moving from the Old Town's path to the Snow line's, paling at dawn.
     var moon = {
@@ -211,7 +237,10 @@
     }
 
     var momoOut = stopped && k >= 1 && this.has('halt');
-    this.drawTrain(d, travel, stopped, momoOut ? 'body' : 'bodyMomo', a, m);
+    var bodyKey = momoOut ? 'body' : 'bodyMomo';
+    this.drawReflection(d, bodyKey, a);
+    if (lc.mist > 0.002) this.drawMist(lc.mist, travel, d);
+    this.drawTrain(d, travel, stopped, bodyKey, m);
 
     // Momo on the platform: tea (frames 1-2, frame 0 now and then); waves at the end of the line.
     if (momoOut) {
@@ -237,7 +266,7 @@
       }
       var g = this.g;
       this.g = off.getContext('2d');
-      this.drawSnow(4 * L, { x: 0, y: 0, size: 22, alpha: 1 }, 0.5);
+      this.drawSnow(stopAt(4), { x: 0, y: 0, size: 22, alpha: 1 }, 0.5);
       this.g = g;
     }
   };
@@ -260,7 +289,7 @@
     this.tile(this.piece('bridge', T.bridge[0], T.bridge[1]), T.bridge[0], T.bridge[1], travel, T.bridge[2]);
     // Each station rests at x -12, in front of the bridge.
     for (var j = 0; j <= 4; j++) {
-      var sx = -12 + (j * L - travel);
+      var sx = -12 + (stopAt(j) - travel);
       if (sx > -440 && sx < 340) this.blit(this.piece('station', T.station[0], T.station[1]), sx, T.station[2], T.station[0], T.station[1]);
     }
   };
@@ -297,21 +326,16 @@
     strip('far', 0.125);
     strip('near', 0.25);
     // END OF THE LINE's station, behind the bridge: the train stands beside the platform.
-    var sx = -12 + (4 * L - travel);
+    var sx = -12 + (stopAt(4) - travel);
     if (sx > -340 && sx < 340) pair('station', function (key) { var z = size(key); self.blit(self.piece(key, z[0], z[1]), sx, SNOWY.station, z[0], z[1]); });
     strip('bridge', 1);
   };
 
-  // The HD train, as the canvas board draws it: reflection, steam, body, wheels, the carriage band
-  // and cylinder over the wheels, the side rod, the headlamp beam. `a` is the Snow line's share
-  // (its reflection is a little different), `m` its sunrise (dims the beam).
-  Scene.prototype.drawTrain = function (d, travel, stopped, bodyKey, a, m) {
-    var g = this.g, S = this.S, self = this;
-    var bw = BODY_W / B, bh = BODY_H / B;
-    var body = this.piece(bodyKey, bw, bh);
-    function P(bx, by) { return [BX + bx / B, BY + by / B]; }   // body px -> art px
-
-    // River reflection: the body flipped, squashed and dim, wheels on the reflection's top line.
+  // The train's river reflection: the body flipped, squashed and dim, wheels on the reflection's
+  // top line. It's part of the river, so it goes behind the mist. `a` is the Snow line's share
+  // (its reflection is a little different).
+  Scene.prototype.drawReflection = function (d, bodyKey, a) {
+    var g = this.g, S = this.S, bw = BODY_W / B, bh = BODY_H / B, body = this.piece(bodyKey, bw, bh);
     var top = mix(181.5, 190, a), sy = mix(0.55, 0.5, a);
     g.save();
     g.globalCompositeOperation = 'lighter';
@@ -320,6 +344,33 @@
     g.scale(1, -sy);
     g.drawImage(body.im, body.r[0], body.r[1], body.r[2], body.r[3], this.X(BX + Math.sin(d * 2) * 0.4), -bh * S, bw * S, bh * S);
     g.restore();
+  };
+
+  // The snowy mist between the two lines: a pale blue-white haze over the scenery (whiter low down)
+  // and a few snowflakes drifting with the ride. The train is drawn after it, fully visible.
+  Scene.prototype.drawMist = function (mist, travel, d) {
+    var g = this.g, gr = g.createLinearGradient(0, this.Y(0), 0, this.Y(H));
+    gr.addColorStop(0, '#c8d5ee'); gr.addColorStop(0.55, '#e2e9f6'); gr.addColorStop(1, '#f1f5fb');
+    g.globalAlpha = mist; g.fillStyle = gr;
+    g.fillRect(0, 0, this.cv.width, this.cv.height);
+    g.fillStyle = '#ffffff';
+    for (var i = 0; i < FLAKES.length; i++) {
+      var f = FLAKES[i];
+      var x = ((f[0] - travel * 0.35 - d * 5 + Math.sin(d * 1.3 + i) * 2) % 344 + 344) % 344 - 6;
+      var y = ((f[1] + d * f[3]) % 212) - 2;
+      g.globalAlpha = mist / 0.7 * f[4];
+      this.rect(Math.round(x), Math.round(y), f[2], f[2]);
+    }
+    g.globalAlpha = 1;
+  };
+
+  // The HD train, as the canvas board draws it: steam, body, wheels, the carriage band and cylinder
+  // over the wheels, the side rod, the headlamp beam. `m` is the Snow line's sunrise (dims the beam).
+  Scene.prototype.drawTrain = function (d, travel, stopped, bodyKey, m) {
+    var g = this.g, S = this.S, self = this;
+    var bw = BODY_W / B, bh = BODY_H / B;
+    var body = this.piece(bodyKey, bw, bh);
+    function P(bx, by) { return [BX + bx / B, BY + by / B]; }   // body px -> art px
 
     // Steam: three puffs while moving, one slow puff while stopped, rising from the chimney.
     var chim = P(1855, 41), puffs = stopped ? 1 : 3;
